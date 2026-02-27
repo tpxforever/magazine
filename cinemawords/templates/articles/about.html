@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}About{% endblock %}
+
+{% block content %}
+
+<div class="page-header page-header--tall">
+  <div class="container">
+    <h1 class="page-header__title reveal">About<br><em>Magazine</em></h1>
+  </div>
+</div>
+
+<div class="container">
+  <div class="prose-page reveal">
+    <p class="prose-lead">TBD is a student-run online magazine dedicated to thoughtful film and television criticism. We believe students have important, vital things to say about cinema — and we're here to publish it.</p>
+
+    <h2>Our Mission</h2>
+    <p>We set out to create a space where students can hone their critical writing skills and contribute to the conversation around contemporary and classic film and television. Whether you're a journalism student, a film studies major, or someone who simply watches a lot of movies — your voice belongs here.</p>
+
+    <h2>What We Publish</h2>
+    <p>We publish reviews, essays, retrospectives, and interviews covering both film and television. We're not genre-snobs — a thoughtful analysis of reality TV is as welcome as a deep-dive into arthouse cinema.</p>
+
+    <h2>How to Get Involved</h2>
+    <p>Create an account, write your piece, and submit it through our online portal. Our small editorial team reviews every submission and responds within five working days. We edit lightly for grammar and clarity only — your voice and perspective remain yours.</p>
+
+    <div class="about-cta">
+      <a href="{% url 'register' %}" class="btn btn--primary btn--lg">Join Magazine</a>
+      <a href="{% url 'article_list' %}" class="btn btn--outline btn--lg">Read Articles</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

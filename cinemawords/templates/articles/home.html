@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero__bg">
+    <div class="hero__grain"></div>
+    <div class="hero__orb hero__orb--1"></div>
+    <div class="hero__orb hero__orb--2"></div>
+  </div>
+  <div class="hero__content">
+    <div class="hero__eyebrow reveal">Student Magazine</div>
+    <h1 class="hero__headline reveal reveal--delay-1">
+      Where students<br><em>find their voice</em><br>in cinema.
+    </h1>
+    <p class="hero__sub reveal reveal--delay-2">
+      Reviews, essays, and criticism written by students who love film and television.
+    </p>
+    <div class="hero__actions reveal reveal--delay-3">
+      <a href="{% url 'article_list' %}" class="btn btn--primary btn--lg">Read Articles</a>
+      <a href="{% url 'submit_article' %}" class="btn btn--outline btn--lg">Submit Your Work</a>
+    </div>
+  </div>
+  <div class="hero__scroll-hint">
+    <span>Scroll</span>
+    <div class="hero__scroll-line"></div>
+  </div>
+</section>
+
+<!-- FEATURED ARTICLE -->
+{% if featured %}
+<section class="featured-section">
+  <div class="container">
+    <div class="section-label reveal">Featured</div>
+    <a href="{{ featured.get_absolute_url }}" class="featured-card reveal reveal--delay-1">
+      <div class="featured-card__image">
+        {% if featured.get_cover %}
+          <img src="{{ featured.get_cover }}" alt="{{ featured.title }}">
+        {% else %}
+          <div class="featured-card__placeholder">
+            <span>{{ featured.subject_title|default:featured.title }}</span>
+          </div>
+        {% endif %}
+        <div class="featured-card__overlay"></div>
+      </div>
+      <div class="featured-card__body">
+        <div class="featured-card__meta">
+          <span class="tag tag--{{ featured.article_type }}">{{ featured.get_article_type_display }}</span>
+          {% if featured.subject_title %}<span class="featured-card__subject">{{ featured.subject_title }}</span>{% endif %}
+        </div>
+        <h2 class="featured-card__title">{{ featured.title }}</h2>
+        <p class="featured-card__excerpt">{{ featured.excerpt }}</p>
+        <div class="featured-card__footer">
+          <span class="author-chip">By {{ featured.author.get_full_name|default:featured.author.username }}</span>
+          {% if featured.rating %}<span class="rating-badge">{{ featured.rating }}/10</span>{% endif %}
+        </div>
+      </div>
+    </a>
+  </div>
+</section>
+{% endif %}
+
+<!-- LATEST ARTICLES -->
+{% if recent %}
+<section class="articles-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-label">Latest</div>
+      <a href="{% url 'article_list' %}" class="section-link">View all →</a>
+    </div>
+    <div class="articles-grid">
+      {% for article in recent %}
+      <a href="{{ article.get_absolute_url }}" class="article-card reveal" style="--delay: {{ forloop.counter0 }}">
+        <div class="article-card__image">
+          {% if article.get_cover %}
+            <img src="{{ article.get_cover }}" alt="{{ article.title }}">
+          {% else %}
+            <div class="article-card__placeholder">
+              <span>{{ article.subject_title|default:article.title|slice:":2"|upper }}</span>
+            </div>
+          {% endif %}
+        </div>
+        <div class="article-card__body">
+          <div class="article-card__meta">
+            <span class="tag tag--{{ article.article_type }}">{{ article.get_article_type_display }}</span>
+            {% if article.rating %}<span class="article-card__rating">{{ article.rating }}</span>{% endif %}
+          </div>
+          <h3 class="article-card__title">{{ article.title }}</h3>
+          {% if article.subject_title %}
+            <div class="article-card__subject">{{ article.subject_title }}{% if article.subject_year %} ({{ article.subject_year }}){% endif %}</div>
+          {% endif %}
+          <div class="article-card__author">{{ article.author.get_full_name|default:article.author.username }}</div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- SPLIT SECTIONS: FILM / TV -->
+<section class="split-section">
+  <div class="container">
+    <div class="split-section__grid">
+
+      <div class="split-col reveal">
+        <div class="split-col__header">
+          <span class="split-col__label">Film</span>
+          <a href="{% url 'article_list' %}?type=film" class="section-link">More →</a>
+        </div>
+        {% for article in film_articles %}
+        <a href="{{ article.get_absolute_url }}" class="list-item">
+          <div class="list-item__num">{{ forloop.counter|stringformat:"02d" }}</div>
+          <div class="list-item__body">
+            <div class="list-item__title">{{ article.title }}</div>
+            {% if article.subject_title %}<div class="list-item__sub">{{ article.subject_title }}</div>{% endif %}
+          </div>
+          {% if article.rating %}<div class="list-item__rating">{{ article.rating }}</div>{% endif %}
+        </a>
+        {% empty %}
+        <p class="empty-state">Film reviews coming soon.</p>
+        {% endfor %}
+      </div>
+
+      <div class="split-divider"></div>
+
+      <div class="split-col reveal reveal--delay-2">
+        <div class="split-col__header">
+          <span class="split-col__label">Television</span>
+          <a href="{% url 'article_list' %}?type=tv" class="section-link">More →</a>
+        </div>
+        {% for article in tv_articles %}
+        <a href="{{ article.get_absolute_url }}" class="list-item">
+          <div class="list-item__num">{{ forloop.counter|stringformat:"02d" }}</div>
+          <div class="list-item__body">
+            <div class="list-item__title">{{ article.title }}</div>
+            {% if article.subject_title %}<div class="list-item__sub">{{ article.subject_title }}</div>{% endif %}
+          </div>
+          {% if article.rating %}<div class="list-item__rating">{{ article.rating }}</div>{% endif %}
+        </a>
+        {% empty %}
+        <p class="empty-state">TV reviews coming soon.</p>
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section reveal">
+  <div class="cta-section__inner">
+    <div class="cta-section__bg">
+      <div class="hero__orb hero__orb--1"></div>
+    </div>
+    <h2>Have something to say about cinema?</h2>
+    <p>CinemaWords publishes student writing on film and television. Submit a review, essay, or interview.</p>
+    <a href="{% url 'register' %}" class="btn btn--primary btn--lg">Start Writing</a>
+  </div>
+</section>
+
+{% endblock %}

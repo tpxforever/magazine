@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Sign In{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card reveal">
+    <div class="auth-card__header">
+      <h1>Welcome back.</h1>
+      <p>Sign in to your CinemaWords account.</p>
+    </div>
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<div class="form-error">{{ field.errors }}</div>{% endif %}
+      </div>
+      {% endfor %}
+      <button type="submit" class="btn btn--primary btn--full">Sign In</button>
+    </form>
+    <div class="auth-card__footer">
+      <p>Don't have an account? <a href="{% url 'register' %}">Join CinemaWords →</a></p>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% block title %}{{ article.title }}{% endblock %}
+
+{% block content %}
+
+<article class="article-detail">
+
+  <!-- HEADER -->
+  <header class="article-header">
+    {% if article.get_cover %}
+    <div class="article-header__image">
+      <img src="{{ article.get_cover }}" alt="{{ article.title }}">
+      <div class="article-header__image-overlay"></div>
+    </div>
+    {% endif %}
+    <div class="article-header__content {% if article.get_cover %}article-header__content--over-image{% endif %}">
+      <div class="container">
+        <div class="article-header__meta reveal">
+          <span class="tag tag--{{ article.article_type }}">{{ article.get_article_type_display }}</span>
+          {% if article.category %}<span class="tag tag--cat">{{ article.category.name }}</span>{% endif %}
+        </div>
+        <h1 class="article-header__title reveal reveal--delay-1">{{ article.title }}</h1>
+        {% if article.excerpt %}
+          <p class="article-header__excerpt reveal reveal--delay-2">{{ article.excerpt }}</p>
+        {% endif %}
+        <div class="article-header__byline reveal reveal--delay-3">
+          <div class="byline">
+            <div class="byline__avatar">{{ article.author.username|slice:":1"|upper }}</div>
+            <div class="byline__info">
+              <span class="byline__name">{{ article.author.get_full_name|default:article.author.username }}</span>
+              <span class="byline__date">{{ article.published_at|date:"F j, Y" }}</span>
+            </div>
+          </div>
+          {% if article.rating %}
+          <div class="article-rating">
+            <span class="article-rating__num">{{ article.rating }}</span>
+            <span class="article-rating__denom">/10</span>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SUBJECT INFO BAR -->
+  {% if article.subject_title or article.director %}
+  <div class="subject-bar">
+    <div class="container">
+      <div class="subject-bar__inner">
+        {% if article.subject_title %}
+        <div class="subject-bar__item">
+          <span class="subject-bar__label">Title</span>
+          <span class="subject-bar__val">{{ article.subject_title }}{% if article.subject_year %} ({{ article.subject_year }}){% endif %}</span>
+        </div>
+        {% endif %}
+        {% if article.director %}
+        <div class="subject-bar__item">
+          <span class="subject-bar__label">Director / Creator</span>
+          <span class="subject-bar__val">{{ article.director }}</span>
+        </div>
+        {% endif %}
+        <div class="subject-bar__item">
+          <span class="subject-bar__label">Views</span>
+          <span class="subject-bar__val">{{ article.views }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- BODY -->
+  <div class="container">
+    <div class="article-body">
+      <div class="article-body__text prose">
+        {{ article.body|linebreaks }}
+      </div>
+
+      <aside class="article-body__sidebar">
+        <div class="sidebar-card">
+          <h4>About the Author</h4>
+          <div class="byline">
+            <div class="byline__avatar">{{ article.author.username|slice:":1"|upper }}</div>
+            <div class="byline__info">
+              <span class="byline__name">{{ article.author.get_full_name|default:article.author.username }}</span>
+              {% if article.author.profile.university %}
+                <span class="byline__date">{{ article.author.profile.university }}</span>
+              {% endif %}
+            </div>
+          </div>
+          {% if article.author.profile.bio %}
+            <p class="sidebar-bio">{{ article.author.profile.bio|truncatewords:40 }}</p>
+          {% endif %}
+        </div>
+
+        {% if article.rating %}
+        <div class="sidebar-card sidebar-card--rating">
+          <h4>Rating</h4>
+          <div class="big-rating">
+            <span class="big-rating__num">{{ article.rating }}</span>
+            <span class="big-rating__denom">/10</span>
+          </div>
+          <div class="rating-bar">
+            <div class="rating-bar__fill" style="width: {{ article.rating|floatformat:0 }}0%"></div>
+          </div>
+        </div>
+        {% endif %}
+      </aside>
+    </div>
+  </div>
+
+  <!-- RELATED -->
+  {% if related %}
+  <section class="related-section">
+    <div class="container">
+      <div class="section-label">More {{ article.get_article_type_display }}s</div>
+      <div class="articles-grid articles-grid--3">
+        {% for r in related %}
+        <a href="{{ r.get_absolute_url }}" class="article-card reveal">
+          <div class="article-card__image">
+            {% if r.get_cover %}
+              <img src="{{ r.get_cover }}" alt="{{ r.title }}">
+            {% else %}
+              <div class="article-card__placeholder">
+                <span>{{ r.subject_title|default:r.title|slice:":2"|upper }}</span>
+              </div>
+            {% endif %}
+          </div>
+          <div class="article-card__body">
+            <h3 class="article-card__title">{{ r.title }}</h3>
+            <div class="article-card__author">{{ r.author.get_full_name|default:r.author.username }}</div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+</article>
+
+{% endblock %}

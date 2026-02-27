@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block title %}{% if editing %}Edit Article{% else %}Submit Writing{% endif %}{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div class="container">
+    <h1 class="page-header__title reveal">{% if editing %}Edit Your Piece{% else %}Submit Your Writing{% endif %}</h1>
+    <p class="page-header__sub reveal reveal--delay-1">{% if not editing %}Your work will be reviewed before publication. We aim to respond within 5 days.{% endif %}</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="form-layout">
+    <form method="post" enctype="multipart/form-data" class="submit-form reveal">
+      {% csrf_token %}
+
+      <div class="form-section">
+        <h3 class="form-section__title">The Piece</h3>
+        <div class="form-group">
+          <label for="{{ form.title.id_for_label }}">Article Title</label>
+          {{ form.title }}
+          {% if form.title.errors %}<div class="form-error">{{ form.title.errors }}</div>{% endif %}
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="{{ form.article_type.id_for_label }}">Type</label>
+            {{ form.article_type }}
+          </div>
+          <div class="form-group">
+            <label for="{{ form.category.id_for_label }}">Category</label>
+            {{ form.category }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="{{ form.excerpt.id_for_label }}">Excerpt <span class="label-hint">Shown on listing pages</span></label>
+          {{ form.excerpt }}
+          {% if form.excerpt.errors %}<div class="form-error">{{ form.excerpt.errors }}</div>{% endif %}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.body.id_for_label }}">Body</label>
+          {{ form.body }}
+          {% if form.body.errors %}<div class="form-error">{{ form.body.errors }}</div>{% endif %}
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3 class="form-section__title">About the Subject</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="{{ form.subject_title.id_for_label }}">Film / Show Title</label>
+            {{ form.subject_title }}
+          </div>
+          <div class="form-group form-group--sm">
+            <label for="{{ form.subject_year.id_for_label }}">Year</label>
+            {{ form.subject_year }}
+          </div>
+          <div class="form-group form-group--sm">
+            <label for="{{ form.rating.id_for_label }}">Rating (optional)</label>
+            {{ form.rating }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="{{ form.director.id_for_label }}">Director / Creator</label>
+          {{ form.director }}
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3 class="form-section__title">Cover Image (optional)</h3>
+        <div class="form-group">
+          <label for="{{ form.cover_image.id_for_label }}">Upload Image</label>
+          {{ form.cover_image }}
+        </div>
+        <div class="form-group">
+          <label for="{{ form.cover_image_url.id_for_label }}">Or Image URL</label>
+          {{ form.cover_image_url }}
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn--primary btn--lg">
+          {% if editing %}Save Changes{% else %}Submit for Review{% endif %}
+        </button>
+        <a href="{% url 'dashboard' %}" class="btn btn--ghost">Cancel</a>
+      </div>
+    </form>
+
+    <aside class="submit-guide reveal reveal--delay-2">
+      <div class="sidebar-card">
+        <h4>Submission Guide</h4>
+        <ul class="guide-list">
+          <li>Write between 300 and 3000 words</li>
+          <li>Include a strong excerpt to draw readers in</li>
+          <li>Avoid plot spoilers in the opening paragraphs</li>
+          <li>All perspectives welcome — reviews, essays, retrospectives, lists</li>
+          <li>We edit lightly for grammar only</li>
+        </ul>
+      </div>
+      <div class="sidebar-card">
+        <h4>Review Process</h4>
+        <p>Our editorial team reviews all submissions within 5 working days. You'll be notified on your dashboard when a decision is made.</p>
+      </div>
+    </aside>
+  </div>
+</div>
+
+{% endblock %}

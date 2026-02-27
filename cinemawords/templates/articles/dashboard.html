@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div class="container">
+    <h1 class="page-header__title reveal">Welcome back, {{ user.get_full_name|default:user.username }}</h1>
+    <p class="page-header__sub reveal reveal--delay-1">Manage your submissions and profile.</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="dashboard-grid">
+
+    <!-- ACTIONS -->
+    <div class="dashboard-actions reveal">
+      <a href="{% url 'submit_article' %}" class="action-card">
+        <div class="action-card__icon">✍</div>
+        <div>
+          <div class="action-card__title">New Submission</div>
+          <div class="action-card__sub">Write something new</div>
+        </div>
+      </a>
+      <a href="{% url 'profile_edit' %}" class="action-card">
+        <div class="action-card__icon">◎</div>
+        <div>
+          <div class="action-card__title">Edit Profile</div>
+          <div class="action-card__sub">Update your bio</div>
+        </div>
+      </a>
+      <a href="{% url 'logout' %}" class="action-card action-card--muted">
+        <div class="action-card__icon">→</div>
+        <div>
+          <div class="action-card__title">Sign Out</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- ARTICLES -->
+    <div class="dashboard-articles reveal reveal--delay-1">
+      <h2 class="dashboard-section-title">Your Submissions</h2>
+      {% if user_articles %}
+        <div class="dashboard-table">
+          {% for article in user_articles %}
+          <div class="dashboard-row">
+            <div class="dashboard-row__main">
+              <div class="dashboard-row__title">{{ article.title }}</div>
+              <div class="dashboard-row__meta">
+                <span class="tag tag--{{ article.article_type }}">{{ article.get_article_type_display }}</span>
+                <span class="tag tag--status tag--{{ article.status }}">{{ article.get_status_display }}</span>
+                <span class="dashboard-row__date">{{ article.created_at|date:"M j, Y" }}</span>
+              </div>
+            </div>
+            <div class="dashboard-row__actions">
+              {% if article.status == 'published' %}
+                <a href="{{ article.get_absolute_url }}" class="btn btn--sm btn--outline">View</a>
+              {% elif article.status != 'rejected' %}
+                <a href="{% url 'edit_article' article.slug %}" class="btn btn--sm btn--ghost">Edit</a>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="empty-state-lg">
+          <p>You haven't submitted anything yet.</p>
+          <a href="{% url 'submit_article' %}" class="btn btn--primary">Submit your first piece</a>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

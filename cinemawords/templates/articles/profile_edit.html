@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="container">
+    <h1 class="page-header__title reveal">Edit Profile</h1>
+  </div>
+</div>
+<div class="container">
+  <div class="form-layout">
+    <form method="post" enctype="multipart/form-data" class="submit-form reveal">
+      {% csrf_token %}
+      <div class="form-section">
+        <h3 class="form-section__title">Personal Info</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="{{ form.first_name.id_for_label }}">First Name</label>
+            {{ form.first_name }}
+          </div>
+          <div class="form-group">
+            <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+            {{ form.last_name }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="{{ form.email.id_for_label }}">Email</label>
+          {{ form.email }}
+        </div>
+      </div>
+      <div class="form-section">
+        <h3 class="form-section__title">About You</h3>
+        <div class="form-group">
+          <label for="{{ form.bio.id_for_label }}">Bio</label>
+          {{ form.bio }}
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="{{ form.university.id_for_label }}">University / College</label>
+            {{ form.university }}
+          </div>
+          <div class="form-group">
+            <label for="{{ form.year_of_study.id_for_label }}">Year of Study</label>
+            {{ form.year_of_study }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="{{ form.avatar.id_for_label }}">Profile Photo</label>
+          {{ form.avatar }}
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn--primary btn--lg">Save Profile</button>
+        <a href="{% url 'dashboard' %}" class="btn btn--ghost">Cancel</a>
+      </div>
+    </form>
+    <aside class="reveal reveal--delay-1">
+      <div class="sidebar-card">
+        <h4>Your Profile</h4>
+        <p style="font-size:13px; color: var(--text-dim); line-height:1.65;">Your name and bio are shown on articles you publish. Help readers know who you are.</p>
+      </div>
+    </aside>
+  </div>
+</div>
+{% endblock %}

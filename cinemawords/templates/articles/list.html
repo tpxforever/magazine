@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}Articles{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div class="container">
+    <h1 class="page-header__title reveal">All Articles</h1>
+    <p class="page-header__sub reveal reveal--delay-1">Criticism and commentary by students.</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- FILTERS -->
+  <div class="filters reveal">
+    <form method="get" class="filters__form">
+      <div class="filters__search">
+        <input type="text" name="q" value="{{ q }}" placeholder="Search articles, films, shows...">
+        <button type="submit">Search</button>
+      </div>
+      <div class="filters__chips">
+        <a href="{% url 'article_list' %}{% if q %}?q={{ q }}{% endif %}" class="chip {% if not selected_type and not selected_kind and not selected_category %}chip--active{% endif %}">All</a>
+        <a href="?type=film{% if q %}&q={{ q }}{% endif %}" class="chip {% if selected_type == 'film' %}chip--active{% endif %}">Film</a>
+        <a href="?type=tv{% if q %}&q={{ q }}{% endif %}" class="chip {% if selected_type == 'tv' %}chip--active{% endif %}">TV</a>
+        <a href="?kind=review{% if q %}&q={{ q }}{% endif %}" class="chip {% if selected_kind == 'review' %}chip--active{% endif %}">Reviews</a>
+        <a href="?kind=essay{% if q %}&q={{ q }}{% endif %}" class="chip {% if selected_kind == 'essay' %}chip--active{% endif %}">Essays</a>
+        <a href="?kind=interview{% if q %}&q={{ q }}{% endif %}" class="chip {% if selected_kind == 'interview' %}chip--active{% endif %}">Interviews</a>
+        <a href="?kind=list{% if q %}&q={{ q }}{% endif %}" class="chip {% if selected_kind == 'list' %}chip--active{% endif %}">Lists</a>
+      </div>
+    </form>
+  </div>
+
+  <!-- RESULTS -->
+  {% if articles %}
+    <div class="articles-grid">
+      {% for article in articles %}
+      <a href="{{ article.get_absolute_url }}" class="article-card reveal" style="--delay: {{ forloop.counter0 }}">
+        <div class="article-card__image">
+          {% if article.get_cover %}
+            <img src="{{ article.get_cover }}" alt="{{ article.title }}">
+          {% else %}
+            <div class="article-card__placeholder">
+              <span>{{ article.subject_title|default:article.title|slice:":2"|upper }}</span>
+            </div>
+          {% endif %}
+        </div>
+        <div class="article-card__body">
+          <div class="article-card__meta">
+            <span class="tag tag--{{ article.article_type }}">{{ article.get_article_type_display }}</span>
+            {% if article.rating %}<span class="article-card__rating">{{ article.rating }}</span>{% endif %}
+          </div>
+          <h3 class="article-card__title">{{ article.title }}</h3>
+          {% if article.subject_title %}
+            <div class="article-card__subject">{{ article.subject_title }}{% if article.subject_year %} ({{ article.subject_year }}){% endif %}</div>
+          {% endif %}
+          <p class="article-card__excerpt">{{ article.excerpt|truncatewords:20 }}</p>
+          <div class="article-card__author">{{ article.author.get_full_name|default:article.author.username }}</div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="empty-state-lg">
+      <p>No articles found{% if q %} for "{{ q }}"{% endif %}.</p>
+      {% if q %}<a href="{% url 'article_list' %}" class="btn btn--outline">Clear search</a>{% endif %}
+    </div>
+  {% endif %}
+
+</div>
+
+{% endblock %}

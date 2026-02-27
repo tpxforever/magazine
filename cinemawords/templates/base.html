@@ -1,0 +1,108 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Magazine{% endblock %} — Student Film & TV Magazine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav__inner">
+    <a href="{% url 'home' %}" class="nav__logo">
+      <span class="nav__logo-text">Magazine<em></em></span>
+    </a>
+
+    <div class="nav__links">
+      <a href="{% url 'article_list' %}">All Articles</a>
+      <a href="{% url 'article_list' %}?type=film">Film</a>
+      <a href="{% url 'article_list' %}?type=tv">Television</a>
+      <a href="{% url 'about' %}">About</a>
+    </div>
+
+    <div class="nav__actions">
+      {% if user.is_authenticated %}
+        <a href="{% url 'submit_article' %}" class="btn btn--sm btn--outline">+ Submit</a>
+        <a href="{% url 'dashboard' %}" class="btn btn--sm btn--ghost">{{ user.username }}</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="btn btn--sm btn--ghost">Sign in</a>
+        <a href="{% url 'register' %}" class="btn btn--sm btn--primary">Join</a>
+      {% endif %}
+    </div>
+
+    <button class="nav__burger" id="navBurger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="nav__mobile" id="navMobile">
+    <a href="{% url 'article_list' %}">All Articles</a>
+    <a href="{% url 'article_list' %}?type=film">Film</a>
+    <a href="{% url 'article_list' %}?type=tv">Television</a>
+    <a href="{% url 'about' %}">About</a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'submit_article' %}">Submit a Piece</a>
+      <a href="{% url 'dashboard' %}">Dashboard</a>
+    {% else %}
+      <a href="{% url 'login' %}">Sign in</a>
+      <a href="{% url 'register' %}">Join</a>
+    {% endif %}
+  </div>
+</nav>
+
+<!-- MESSAGES -->
+{% if messages %}
+<div class="messages">
+  {% for message in messages %}
+  <div class="message message--{{ message.tags }}">
+    {{ message }}
+    <button class="message__close" onclick="this.parentElement.remove()">✕</button>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- MAIN -->
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__brand">
+      <span class="nav__logo-text">Magazine<em></em></span>
+      <p>A student-run magazine dedicated to film and television criticism.</p>
+    </div>
+    <div class="footer__links">
+      <div class="footer__col">
+        <h4>Explore</h4>
+        <a href="{% url 'article_list' %}?type=film">Film</a>
+        <a href="{% url 'article_list' %}?type=tv">Television</a>
+        <a href="{% url 'article_list' %}?kind=review">Reviews</a>
+        <a href="{% url 'article_list' %}?kind=essay">Essays</a>
+      </div>
+      <div class="footer__col">
+        <h4>Contribute</h4>
+        <a href="{% url 'submit_article' %}">Submit Writing</a>
+        <a href="{% url 'register' %}">Join the Team</a>
+        <a href="{% url 'about' %}">About Us</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <span>© 2025 Magazine. Made by students, for students.</span>
+  </div>
+</footer>
+
+<script src="{% static 'js/main.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>
