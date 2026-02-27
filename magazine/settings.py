@@ -8,7 +8,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-change-me-before-deploying')
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost 127.0.0.1').split()
-CSRF_TRUSTED_ORIGINS = ['https://magazine-production-6db6.up.railway.app']
 
 # ---- APPS ----
 INSTALLED_APPS = [
@@ -24,7 +23,7 @@ INSTALLED_APPS = [
 # ---- MIDDLEWARE ----
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',   # serves static files in production
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -54,6 +53,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'magazine.wsgi.application'
 
 # ---- DATABASE ----
+# Uses DATABASE_URL env var in production (set by Railway/Render automatically)
+# Falls back to local SQLite for development
 DATABASES = {
     'default': dj_database_url.config(
         default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
@@ -80,16 +81,15 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
+CSRF_TRUSTED_ORIGINS = ['https://magazine-production-6db6.up.railway.app']
 # ---- MEDIA FILES ----
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# ---- AUTH ----
-LOGIN_URL = '/login/'
+# ---- AUTH REDIRECTS ----
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-
+LOGIN_URL = '/login/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ---- PRODUCTION SECURITY (only active when DEBUG=False) ----
@@ -99,4 +99,3 @@ if not DEBUG:
     X_FRAME_OPTIONS = 'DENY'
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-DEBUG = False
