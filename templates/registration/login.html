@@ -6,7 +6,7 @@
   <div class="auth-card reveal">
     <div class="auth-card__header">
       <h1>Welcome back.</h1>
-      <p>Sign in to your CinemaWords account.</p>
+      <p>Sign in to your Magazine account.</p>
     </div>
     <form method="post" class="auth-form">
       {% csrf_token %}
@@ -20,7 +20,7 @@
       <button type="submit" class="btn btn--primary btn--full">Sign In</button>
     </form>
     <div class="auth-card__footer">
-      <p>Don't have an account? <a href="{% url 'register' %}">Join CinemaWords →</a></p>
+      <p>Don't have an account? <a href="{% url 'register' %}">Join Magazine →</a></p>
     </div>
   </div>
 </div>
