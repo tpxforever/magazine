@@ -81,7 +81,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
+CSRF_TRUSTED_ORIGINS = ['https://magazine-production-6db6.up.railway.app']
 # ---- MEDIA FILES ----
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
